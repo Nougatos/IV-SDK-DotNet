@@ -19,11 +19,14 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Debug\IVSDKDotNet\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +34,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>3</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
@@ -96,4 +99,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>:: Delete .pdb and .xml files
+del "$(TargetDir)*.pdb"
+del "$(TargetDir)*.xml"
+
+:: Delete the "IVSDKDotNetWrapper.dll" file
+del "$(TargetDir)IVSDKDotNetWrapper.dll"
+
+:: Create the "bin" sub-folder if it doesn't exist
+if not exist "$(TargetDir)bin\" mkdir "$(TargetDir)bin\"
+
+:: Move all DLLs, except "IVSDKDotNet.Manager.dll", to the "bin" sub-folder
+for %25%25f in ("$(TargetDir)*.dll") do if not "%25%25~nxf"=="IVSDKDotNet.Manager.dll" move "%25%25f" "$(TargetDir)bin\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
