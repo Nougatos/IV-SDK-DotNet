@@ -1,15 +1,15 @@
-﻿using System;
+﻿using EasyHook;
+using SharpDX;
+using SharpDX.Direct3D9;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-using EasyHook;
-using IVSDKDotNet;
-using SharpDX;
-using SharpDX.Direct3D9;
-
-namespace Manager.Direct3D9 {
-    internal class DXHook : IDisposable {
+namespace Manager.Direct3D9
+{
+    internal class DXHook : IDisposable
+    {
 
         #region Variables and Enums
         // Variables
@@ -180,19 +180,24 @@ namespace Manager.Direct3D9 {
         #region Disposing
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue) {
+            if (!disposedValue)
+            {
                 OnDispose?.Invoke(this, EventArgs.Empty);
 
-                if (disposing) {
-                    if (d3d9DeviceVTable != null) {
+                if (disposing)
+                {
+                    if (d3d9DeviceVTable != null)
+                    {
                         d3d9DeviceVTable.Clear();
                         d3d9DeviceVTable = null;
                     }
-                    if (endSceneHooker != null) {
+                    if (endSceneHooker != null)
+                    {
                         endSceneHooker.Dispose();
                         endSceneHooker = null;
                     }
-                    if (resetHooker != null) {
+                    if (resetHooker != null)
+                    {
                         resetHooker.Dispose();
                         resetHooker = null;
                     }
@@ -237,7 +242,7 @@ namespace Manager.Direct3D9 {
             {
                 using (Form renderForm = new Form())
                 {
-                    using (Device tempDevice = new Device(d3d, 0, DeviceType.NullReference, IntPtr.Zero, CreateFlags.HardwareVertexProcessing, new PresentParameters() { BackBufferWidth = 1, BackBufferHeight = 1, DeviceWindowHandle = renderForm.Handle }))
+                    using (Device tempDevice = new Device(d3d, 0, DeviceType.NullReference, IntPtr.Zero, CreateFlags.HardwareVertexProcessing, new PresentParameters() { Windowed = true, DeviceWindowHandle = renderForm.Handle }))
                     {
                         d3d9DeviceVTable.AddRange(GetVTblAddresses(tempDevice.NativePointer, 119));
                     }
